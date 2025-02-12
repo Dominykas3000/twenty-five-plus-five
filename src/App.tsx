@@ -27,12 +27,12 @@ function App() {
     const timerID = window.setInterval(() => {
       setDisplayState((prev) => ({
         ...prev,
-        time: prev.time > 0 ? prev.time - 1 : 0, // Ensure it doesn't go negative
+        time: prev.time > 0 ? prev.time - 1 : 0,
       }));
     }, 1000);
 
     return () => window.clearInterval(timerID);
-  }, [displayState.timerRunning, displayState.time]); // Added `displayState.time`
+  }, [displayState.timerRunning, displayState.time]);
 
   useEffect(() => {
     if (displayState.time === 0) {
@@ -40,33 +40,31 @@ function App() {
       if (audio) {
         audio.pause();
         audio.currentTime = 0;
-        audio.play().catch((err) => console.log(err)); // Ensure it plays
+        audio.play().catch((err) => console.log(err));
       }
     }
   }, [displayState.time]);
 
   useEffect(() => {
     if (displayState.time === 0) {
-      // Play the beep sound
       const audio = document.getElementById("beep") as HTMLAudioElement;
       if (audio) {
         audio.pause();
         audio.currentTime = 0;
-        audio.play().catch((err) => console.log(err)); // Ensure it plays
+        audio.play().catch((err) => console.log(err));
       }
 
-      // Switch between session and break
       setDisplayState((prev) => ({
         timeType: prev.timeType === "Session" ? "Break" : "Session",
-        time: prev.timeType === "Session" ? breakTime : sessionTime, // Switch the time
-        timerRunning: true, // Ensure it keeps running
+        time: prev.timeType === "Session" ? breakTime : sessionTime,
+        timerRunning: true,
       }));
     }
   }, [displayState.time, breakTime, sessionTime]);
 
   const reset = () => {
-    setBreakTime(300); // 5 minutes
-    setSessionTime(1500); // 25 minutes
+    setBreakTime(300);
+    setSessionTime(1500);
     setDisplayState({
       time: 1500,
       timeType: "Session",
@@ -104,20 +102,20 @@ function App() {
     }));
   };
 
-  const decrementDisplay = () => {
-    setDisplayState((prev) => {
-      if (prev.time > 0) {
-        return { ...prev, time: prev.time - 1 };
-      }
+  // const decrementDisplay = () => {
+  //   setDisplayState((prev) => {
+  //     if (prev.time > 0) {
+  //       return { ...prev, time: prev.time - 1 };
+  //     }
 
-      // Switch between session and break at 00:00
-      return {
-        timeType: prev.timeType === "Session" ? "Break" : "Session",
-        time: prev.timeType === "Session" ? breakTime : sessionTime,
-        timerRunning: true, // Ensure the timer keeps running
-      };
-    });
-  };
+  //     // Switch between session and break at 00:00
+  //     return {
+  //       timeType: prev.timeType === "Session" ? "Break" : "Session",
+  //       time: prev.timeType === "Session" ? breakTime : sessionTime,
+  //       timerRunning: true, // Ensure the timer keeps running
+  //     };
+  //   });
+  // };
 
   return (
     <div className="clock">
